@@ -1,17 +1,29 @@
 import sys
+import json
 
-def hw():
-    print 'Hello, world!'
-
-def lines(fp):
-    print str(len(fp.readlines()))
 
 def main():
     sent_file = open(sys.argv[1])
     tweet_file = open(sys.argv[2])
-    hw()
-    lines(sent_file)
-    lines(tweet_file)
+    scores = {}  # initialize an empty dictionary
+    sent_size = 0
+    tweet_size = 0
+    for line in sent_file:
+        sent_size += 1
+        term, score = line.split("\t")  # The file is tab-delimited. "\t" means "tab character"
+        scores[term] = int(score)  # Convert the score to an integer.
+    for line in tweet_file:
+        tweet_size += 1
+        obj = json.loads(line)
+        score = 0
+        if "text" in obj:
+            text = obj["text"]
+            #print text
+            for term in text.split():
+                score += scores.get(term, 0)
+        print score
+    #print sent_size, tweet_size
+
 
 if __name__ == '__main__':
     main()
