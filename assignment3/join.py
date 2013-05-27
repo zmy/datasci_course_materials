@@ -1,3 +1,4 @@
+__author__ = 'moony'
 import MapReduce
 import sys
 
@@ -7,18 +8,19 @@ mr = MapReduce.MapReduce()
 # =============================
 # Do not modify above this line
 
+
 def mapper(record):
     # key: document identifier
     # value: document contents
-    key = record[0]
-    value = record[1]
-    words = value.split()
-    for w in words:
-        mr.emit_intermediate(w, key)
+    mr.emit_intermediate(record[1], record)
 
 
 def reducer(key, list_of_values):
-    mr.emit((key, list(set(list_of_values))))
+    for line_item in list_of_values:
+        if line_item[0] == 'line_item':
+            for order in list_of_values:
+                if order[0] == 'order':
+                    mr.emit(order + line_item)
 
 
 # Do not modify below this line
